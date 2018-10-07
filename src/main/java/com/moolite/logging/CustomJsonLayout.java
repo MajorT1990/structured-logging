@@ -2,6 +2,7 @@ package com.moolite.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.contrib.json.classic.JsonLayout;
+import org.slf4j.Marker;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,6 +11,11 @@ public class CustomJsonLayout extends JsonLayout {
 
     @Override
     protected Map toJsonMap(ILoggingEvent event) {
+        Marker marker = event.getMarker();
+        String logType = "log";
+        if(marker != null) {
+            logType = marker.getName();
+        }
 
         Map<String, Object> loggingData = new LinkedHashMap<String, Object>();
         Map<String, Object> dexterLoggingEntry = new LinkedHashMap<String, Object>();
@@ -23,7 +29,7 @@ public class CustomJsonLayout extends JsonLayout {
         add(THREAD_ATTR_NAME, this.includeThreadName, event.getThreadName(), loggingData);
         addMap(MDC_ATTR_NAME, true, event.getMDCPropertyMap(), loggingData);
         //wtf?
-        addMap("context", true, event.getMDCPropertyMap(), loggingData);
+        addMap("derp", true, event.getMDCPropertyMap(), loggingData);
         add(LOGGER_ATTR_NAME, this.includeLoggerName, event.getLoggerName(), loggingData);
         add(FORMATTED_MESSAGE_ATTR_NAME, this.includeFormattedMessage, event.getFormattedMessage(), loggingData);
         add(MESSAGE_ATTR_NAME, this.includeMessage, event.getMessage(), loggingData);
@@ -32,8 +38,9 @@ public class CustomJsonLayout extends JsonLayout {
         addCustomDataToJsonMap(loggingData, event);
 
         addMap("payload", true, loggingData, dexterLoggingEntry);
-        add("event", true, "log", dexterLoggingEntry);
+        add("event", true, logType, dexterLoggingEntry);
 
         return dexterLoggingEntry;
     }
+
 }
