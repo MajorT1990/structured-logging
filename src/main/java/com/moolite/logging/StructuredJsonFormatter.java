@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
-public class CustomJsonFormatter implements JsonFormatter {
+public class StructuredJsonFormatter implements JsonFormatter {
 
     public static final int BUFFER_SIZE = 512;
 
     private ObjectMapper objectMapper;
     private boolean prettyPrint;
 
-    public CustomJsonFormatter() {
+    public StructuredJsonFormatter() {
         this.objectMapper = new ObjectMapper();
         this.prettyPrint = false;
     }
